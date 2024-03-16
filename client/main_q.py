@@ -4,6 +4,8 @@ import requests
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtGui import QIcon
 
+# 程序设置
+api = "http://example.com/"  # 后端地址，务必按照这样的格式填写（网址结尾加"/"）
 
 def gen_key():
     u = open("account.json", "r")
@@ -44,13 +46,13 @@ class Ui_Dialog(object):
         self.PushButton.clicked.connect(self.getkey)
         self.LineEdit.setPlaceholderText(_translate("Dialog", "卡密将会在这里被输出，同时保存至小号机目录下"))
         self.SubtitleLabel.setText(_translate("Dialog", "AZ小号机"))
-        requ = str(requests.get("https://v1.api.azstudio.net.cn/odd").json()["odd"])
+        requ = str(requests.get("{}odd".format(api)).json()["odd"])
         self.CaptionLabel.setText("库存剩余：{}个卡密".format(requ))
 
     def getkey(self):
         self.CaptionLabel.setText("")
         key = gen_key()
-        req = requests.get("https://v1.api.azstudio.net.cn/get?user_key={}".format(key)).json()
+        req = requests.get("{}get?user_key={}".format(api, key)).json()
         if req["code"] == 200:
             self.LineEdit.setText(req["msg"])
             u = open("卡密.txt", "a", encoding="utf-8")
